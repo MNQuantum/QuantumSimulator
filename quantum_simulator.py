@@ -10,6 +10,8 @@ Quantum gates are also represented as complex tensors.
   *  A unary gate is a tensor of shape (2, 2).
   *  A binary gate is a tensor of shape (2, 2, 2, 2).
   *  A ternary gate is a tensor of shape (2, 2, 2, 2, 2, 2).
+Quantum gates are applied using tensor contraction, which is a
+generalization of matrix multiplication.
 
 Any quantum circuit can be expressed using only unary and binary gates.
 Ternary gates are rarely used in practice since they are expensive to compute.
@@ -169,7 +171,7 @@ def CY(i, j):
 
 
 def CZ(i, j):
-    """Generates a controlled gate."""
+    """Generates a controlled Z gate."""
     gate = np.array([1, 0, 0, 0,
                      0, 1, 0, 0,
                      0, 0, 1, 0,
