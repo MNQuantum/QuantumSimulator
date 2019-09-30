@@ -24,6 +24,13 @@ Measuring an n-qubit quantum register returns a binary vector of length n,
 representing a random multi-index of the tensor. The probability of obtaining
 a multi-index is equal to the squared magnitude of the corresponding entry
 of the tensor. Measuring a register changes the state of the register.
+
+Author: David Radcliffe (dradcliffe@gmail.com)
+
+May be reused with or without modifications, including commercially, provided that 
+credit is given to the original author, and a link to this repository is included.
+
+Last updated: 2019-09-30
 """
 
 from itertools import product
