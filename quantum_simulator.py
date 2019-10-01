@@ -279,7 +279,7 @@ def measure_all():
             if cumsum >= target:
                 break
         register.fill(0)
-        register[(0,) * register.ndim] = 1
+        register[multiindex] = 1
         return multiindex
     return m
 
