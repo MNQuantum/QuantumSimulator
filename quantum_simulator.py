@@ -386,4 +386,6 @@ def run_tests():
 
 
 if __name__ == '__main__':
+    print('Running tests.')
     run_tests()
+    print('Tests complete. No errors found.')
