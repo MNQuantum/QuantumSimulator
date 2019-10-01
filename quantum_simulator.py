@@ -88,6 +88,26 @@ def apply_gate(gate, *indices):
     return op
 
 
+def circuit(ops):
+    """Constructs a circuit as a sequence of quantum gates.
+    This higher-order function returns another function that
+    can be applied to a quantum register."""
+    def circ(register):
+        for op in ops:
+            register = op(register)
+        return register
+    return circ
+
+
+def measure_circuit(ops, index=None):
+    """Constructs a circuit and performs a measurement."""
+    circ = circuit(ops)
+    def m(register):
+        if index is None:
+            return measure_all() (circ(register))
+        return measure(index) (circ(register))
+    return m
+
 ##### Unary gates
 
 def X(index):
@@ -125,7 +145,7 @@ def S(index):
 
 
 def T(index):
-    """The T gate is a 45 degree rotation of the Bloch sphere about the X-axis.""" 
+    """The T gate is a 45 degree rotation of the Bloch sphere about the Z-axis.""" 
     return R(index, np.pi/4)
 
 
@@ -348,7 +368,12 @@ def test_measurement():
     assert abs(m1 - 9000) < 250
     assert abs(m2 - 4000) < 150
 
-        
+def test_circuits():
+    register = random_register(2)
+    bell1 = bell_state(0, 1)
+    bell2 = circuit([H(0), CNOT(0, 1)])
+    assert np.allclose(bell1(register), bell2(register))
+
 
 def run_tests():
     """Run all tests."""
@@ -357,6 +382,7 @@ def run_tests():
     test_ternary_gates()
     test_bell_state()
     test_measurement()
+    test_circuits()
 
 
 if __name__ == '__main__':
