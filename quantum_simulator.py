@@ -39,7 +39,8 @@ from collections import Counter
 
 
 def quantum_register(number_of_qubits):
-    """Creates a linear register of qubits, initialized to zero. Returns a complex tensor of shape (2, 2, ..., 2)."""
+    """Creates a linear register of qubits, initialized to |000...0>.
+    Returns a complex tensor of shape (2, 2, ..., 2)."""
     shape = (2,) * number_of_qubits
     first = (0,) * number_of_qubits
     register = np.zeros(shape, dtype=np.complex64)
@@ -48,7 +49,8 @@ def quantum_register(number_of_qubits):
 
 
 def random_register(number_of_qubits):
-    """Creates a linear register of qubits, initialized to random complex values. Returns a complex tensor of shape (2, 2, ..., 2)."""
+    """Creates a linear register of qubits with random complex amplitudes.
+    Returns a complex tensor of shape (2, 2, ..., 2)."""
     shape = (2,) * number_of_qubits
     register = np.random.rand(*shape) + 1j * np.random.rand(*shape) - (0.5 + 0.5j)
     register = register / np.linalg.norm(register)
