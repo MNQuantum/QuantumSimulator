@@ -28,7 +28,7 @@ of the tensor. Measuring a register changes the state of the register.
 
 # Credits
 
-Written by David Radcliffe (dradcliffe@gmail.com)
+Written by David Radcliffe (dradcliffe@gmail.com).
 
 # License
 
