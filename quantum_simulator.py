@@ -1,6 +1,11 @@
 """
 Quantum computing simulator using NumPy tensors.
 
+    Author: David Radcliffe (dradcliffe@gmail.com)
+    URL: https://github.com/MNQuantum/QuantumSimulator
+    License: GPLv2. See LICENSE file for more information.
+    Last updated: 30 September 2019
+
 An n-qubit quantum register is represented by a tensor of complex numbers
 of shape (2, 2, ..., 2), containing 2^n complex numbers. Each complex number
 requires 64 bits of memory. The sum of the squared magnitudes of a quantum
@@ -25,13 +30,9 @@ representing a random multi-index of the tensor. The probability of obtaining
 a multi-index is equal to the squared magnitude of the corresponding entry
 of the tensor. Measuring a register changes the state of the register.
 
-Author: David Radcliffe (dradcliffe@gmail.com)
-
 This file is open source under the GPL License. See the LICENSE file for more details.
 If you use the code in any way, please credit the author and include a link to the
-repository: https://github.com/MNQuantum/QuantumSimulator.
-
-Last updated: 2019-09-30
+repository.
 """
 
 from itertools import product
