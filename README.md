@@ -10,6 +10,7 @@ Quantum gates are also represented as complex tensors.
   *  A unary gate is a tensor of shape (2, 2).
   *  A binary gate is a tensor of shape (2, 2, 2, 2).
   *  A ternary gate is a tensor of shape (2, 2, 2, 2, 2, 2).
+
 Quantum gates are applied using tensor contraction, which is a
 generalization of matrix multiplication.
 
