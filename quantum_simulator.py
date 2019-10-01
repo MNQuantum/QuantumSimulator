@@ -27,8 +27,9 @@ of the tensor. Measuring a register changes the state of the register.
 
 Author: David Radcliffe (dradcliffe@gmail.com)
 
-May be reused with or without modifications, including commercially, provided that 
-credit is given to the original author, and a link to this repository is included.
+This file is open source under the GPL License. See the LICENSE file for more details.
+If you use the code in any way, please credit the author and include a link to the
+repository: https://github.com/MNQuantum/QuantumSimulator.
 
 Last updated: 2019-09-30
 """
