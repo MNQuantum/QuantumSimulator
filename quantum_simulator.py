@@ -8,7 +8,7 @@ Quantum computing simulator using NumPy tensors.
 
 An n-qubit quantum register is represented by a tensor of complex numbers
 of shape (2, 2, ..., 2), containing 2^n complex numbers. Each complex number
-requires 64 bits of memory. The sum of the squared magnitudes of a quantum
+requires 128 bits of memory. The sum of the squared magnitudes of a quantum
 register is always one.
 
 Quantum gates are also represented as complex tensors.
@@ -21,7 +21,7 @@ generalization of matrix multiplication.
 Any quantum circuit can be expressed using only unary and binary gates.
 Ternary gates are rarely used in practice since they are expensive to compute.
 
-In this package, the quantum gate functions are "higher-level functions". 
+In this package, the quantum gate functions are "higher-level functions".
 The return value is always another function, which can be applied to a quantum register.
 This makes it easier to reuse gates in a circuit.
 
@@ -45,7 +45,7 @@ def quantum_register(number_of_qubits):
     Returns a complex tensor of shape (2, 2, ..., 2)."""
     shape = (2,) * number_of_qubits
     first = (0,) * number_of_qubits
-    register = np.zeros(shape, dtype=np.complex64)
+    register = np.zeros(shape, dtype=np.complex128)
     register[first] = 1+0j
     return register
 
@@ -54,7 +54,8 @@ def random_register(number_of_qubits):
     """Creates a linear register of qubits with random complex amplitudes.
     Returns a complex tensor of shape (2, 2, ..., 2)."""
     shape = (2,) * number_of_qubits
-    register = np.random.rand(*shape) + 1j * np.random.rand(*shape) - (0.5 + 0.5j)
+    register = np.random.rand(2 ** number_of_qubits, 2).dot(
+               np.array([1, 1j])).reshape(shape)
     register = register / np.linalg.norm(register)
     return register
 
@@ -117,14 +118,14 @@ def measure_circuit(ops, index=None):
 def X(index):
     """Generates a Pauli X gate (also called a NOT gate) acting on a given index.
     It returns a function that can be applied to a register."""
-    gate = np.array([[0, 1], [1, 0]], dtype=np.complex64)
+    gate = np.array([[0, 1], [1, 0]], dtype=np.complex128)
     return apply_gate(gate, index)
 
 
 def Y(index):
     """Generates a Pauli Y gate acting on a given index.
     It returns a function that can be applied to a register."""
-    gate = np.array([[0, -1j], [1j, 0]], dtype=np.complex64)
+    gate = np.array([[0, -1j], [1j, 0]], dtype=np.complex128)
     return apply_gate(gate, index)
 
 
@@ -132,14 +133,14 @@ def Z(index):
     """Generates a Pauli Z gate acting on a given index.
     This is the same as a rotation of the Bloch sphere by pi radians about the Z-axis.
     It returns a function that can be applied to a register."""
-    gate = np.array([[1, 0], [0, -1]], dtype=np.complex64)
+    gate = np.array([[1, 0], [0, -1]], dtype=np.complex128)
     return apply_gate(gate, index)
 
 
 def R(index, angle):
-    """Generates a rotation of the Block sphere about the Z-axis by a given 
+    """Generates a rotation of the Block sphere about the Z-axis by a given
     It returns a function that can be applied to a register."""
-    gate = np.array([[1, 0], [0, np.exp(1j * angle)]], dtype=np.complex64)
+    gate = np.array([[1, 0], [0, np.exp(1j * angle)]], dtype=np.complex128)
     return apply_gate(gate, index)
 
 
@@ -149,14 +150,13 @@ def S(index):
 
 
 def T(index):
-    """The T gate is a 45 degree rotation of the Bloch sphere about the Z-axis.""" 
+    """The T gate is a 45 degree rotation of the Bloch sphere about the Z-axis."""
     return R(index, np.pi/4)
 
 
 def H(index):
     """Generates a Hadamard gate. It returns a function that can be applied to a register."""
-    r = np.sqrt(0.5)
-    gate = np.array([[r, r], [r, -r]])
+    gate = np.array([[1, 1], [1, -1]]) / np.sqrt(2)
     return apply_gate(gate, index)
 
 
@@ -268,11 +268,11 @@ def measure(index):
 
 
 def measure_all():
-    """Returns a function that performs a full measurement on a quantum register, 
+    """Returns a function that performs a full measurement on a quantum register,
     fully collapsing the quantum state, and returns a binary vector of length equal
     to the number of qubits in the register."""
     def m(register):
-        target = np.random.rand() * np.linalg.norm(register) ** 2 
+        target = np.random.rand() * np.linalg.norm(register) ** 2
         cumsum = 0.
         for multiindex in product(range(2), repeat=register.ndim):
             cumsum += np.abs(register[multiindex]) ** 2
@@ -287,7 +287,7 @@ def measure_all():
 # See https://docs.scipy.org/doc/numpy/reference/generated/numpy.argmax.html
 def max_multiindex(register):
     """Locates the entry of a tensor having the largest magnitude.
-    Returns a binary vector of length equal to the number of qubits in the register.""" 
+    Returns a binary vector of length equal to the number of qubits in the register."""
     return np.unravel_index(np.argmax(np.abs(register)), register.shape)
 
 
@@ -346,7 +346,7 @@ def test_ternary_gates():
 def test_bell_state():
     """Test the Bell state generator."""
     counts = Counter(
-        measure_all() (bell_state(0,1) (quantum_register(3))) 
+        measure_all() (bell_state(0,1) (quantum_register(3)))
         for _ in range(10000))
     assert counts[0, 0, 0] + counts[1, 1, 0] == 10000
     assert abs(counts[0, 0, 0] - counts[1, 1, 0]) < 500
