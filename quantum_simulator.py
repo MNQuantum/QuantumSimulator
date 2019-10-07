@@ -4,7 +4,7 @@ Quantum computing simulator using NumPy tensors.
     Author: David Radcliffe (dradcliffe@gmail.com)
     URL: https://github.com/MNQuantum/QuantumSimulator
     License: GPLv2. See LICENSE file for more information.
-    Last updated: 30 September 2019
+    Last updated: 6 October 2019
 
 An n-qubit quantum register is represented by a tensor of complex numbers
 of shape (2, 2, ..., 2), containing 2^n complex numbers. Each complex number
@@ -54,8 +54,7 @@ def random_register(number_of_qubits):
     """Creates a linear register of qubits with random complex amplitudes.
     Returns a complex tensor of shape (2, 2, ..., 2)."""
     shape = (2,) * number_of_qubits
-    register = np.random.rand(2 ** number_of_qubits, 2).dot(
-               np.array([1, 1j])).reshape(shape)
+    register = np.random.randn(*shape) + np.random.randn(*shape) * 1j
     register = register / np.linalg.norm(register)
     return register
 
