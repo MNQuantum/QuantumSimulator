@@ -266,19 +266,18 @@ def measure(index):
     return m
 
 
-def measure_all():
+def measure_all(collapse=True):
     """Returns a function that performs a full measurement on a quantum register,
     fully collapsing the quantum state, and returns a binary vector of length equal
     to the number of qubits in the register."""
     def m(register):
-        target = np.random.rand() * np.linalg.norm(register) ** 2
-        cumsum = 0.
-        for multiindex in product(range(2), repeat=register.ndim):
-            cumsum += np.abs(register[multiindex]) ** 2
-            if cumsum >= target:
-                break
-        register.fill(0)
-        register[multiindex] = 1
+        r = register.ravel()
+        r = r / np.linalg.norm(r)
+        index = np.random.choice(range(len(r)), p=np.abs(r)**2)
+        multiindex = np.unravel_index(index, register.shape)
+        if collapse:
+            register.fill(0)
+            register[multiindex] = 1.0j
         return multiindex
     return m
 
@@ -351,7 +350,7 @@ def test_bell_state():
     assert abs(counts[0, 0, 0] - counts[1, 1, 0]) < 500
 
 
-def test_measurement():
+def test_partial_measurement():
     """Run tests of the partial measurement function."""
     c = Counter()
     for _ in range(14000):
@@ -371,6 +370,17 @@ def test_measurement():
     assert abs(m1 - 9000) < 250
     assert abs(m2 - 4000) < 150
 
+
+def test_full_measurement():
+    register = np.array([0.3, 0.4j, -0.5, 0.5 ** 0.5]).reshape((2, 2))
+    m = measure_all(collapse=False)
+    N = 100000
+    expected = [N * 0.09, N * 0.16, N * 0.25, N * 0.5]
+    counts = Counter(m(register) for _ in range(N))
+    observed = [counts[0,0], counts[0,1], counts[1,0], counts[1,1]]
+    assert all(abs(x - y) < 400 for x, y in zip(expected, observed))
+
+
 def test_circuits():
     register = random_register(2)
     bell1 = bell_state(0, 1)
@@ -384,7 +394,8 @@ def run_tests():
     test_binary_gates()
     test_ternary_gates()
     test_bell_state()
-    test_measurement()
+    test_partial_measurement()
+    test_full_measurement()
     test_circuits()
 
 
