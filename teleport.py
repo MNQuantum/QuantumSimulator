@@ -30,11 +30,16 @@ def teleport(i, j, k):
 
 
 def teleport_test():
-    register = q.quantum_register(3)
-    register[0, 0, 0] = 0.8j
-    register[1, 0, 0] = -0.6
-    for _ in range(20):
+    for _ in range(100):
+        # Create a 3-qubit register. The first qubit has a random state,
+        # and the other two are initialized to |00>.
+        register = q.quantum_register(3)
+        register[:, 0, 0] = q.random_register(1)
+
+        # Attempt teleportation
         b0, b1, observed = teleport(0, 1, 2)(register)
+
+        # Confirm that the state of the first qubit has been transferred to the third qubit.
         expected = q.quantum_register(3)
         expected[0, 0, 0] = 0
         expected[b0, b1, :] = register[:, 0, 0]
