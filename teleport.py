@@ -20,9 +20,9 @@ def teleport(i, j, k):
         bit_j = q.measure(j) (register)
 
         # Apply X and Z gates based on the values of the classical bits.
-        if bit_i: 
+        if bit_j: 
             register = q.X(k) (register)
-        if bit_j:
+        if bit_i:
             register = q.Z(k) (register)
         
         return bit_i, bit_j, register
@@ -42,8 +42,9 @@ def teleport_test():
         # Confirm that the state of the first qubit has been transferred to the third qubit.
         expected = q.quantum_register(3)
         expected[0, 0, 0] = 0
-        expected[b0, b1, :] = register[:, 0, 0]
-        np.allclose(expected, observed)
+        expected[b0, b1, 0] = register[0, 0, 0]
+        expected[b0, b1, 1] = register[1, 0, 0]
+        assert np.allclose(expected, observed)
 
 
 if __name__ == '__main__':
