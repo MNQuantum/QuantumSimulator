@@ -258,7 +258,7 @@ def measure(index):
         probs = np.sum(np.abs(register) ** 2, axis=axis)
         p = probs[0] / np.sum(probs)
         s = [slice(0, 2)] * n
-        result = np.random.rand() > p
+        result = int(np.random.rand() > p)
         s[index] = slice(0,1) if result else slice(1, 2)
         register[tuple(s)] = 0
         register *= 1 / np.linalg.norm(register)
