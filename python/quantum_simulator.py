@@ -61,7 +61,7 @@ def random_register(number_of_qubits):
 
 def display(tensor):
     """Displays the tensor entries in tabular form"""
-    for multiindex in product(range(2), repeat=tensor.ndim):
+    for multiindex in product(*map(range, tensor.shape)):
         ket = '|' + str(multiindex)[1:-1].replace(', ', '') + '⟩'
         value = tensor[multiindex]
         print('%s\t%.5f + %.5f i' % (ket, value.real, value.imag))
