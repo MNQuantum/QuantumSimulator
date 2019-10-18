@@ -17,7 +17,7 @@ generalization of matrix multiplication.
 Any quantum circuit can be expressed using only unary and binary gates.
 Ternary gates are rarely used in practice since they are expensive to compute.
 
-In this package, the quantum gate functions are "higher-level functions". 
+In this package, the quantum gate functions are "higher-level functions".
 The return value is always another function, which can be applied to a quantum register.
 This makes it easier to reuse gates in a circuit.
 
@@ -25,6 +25,11 @@ Measuring an n-qubit quantum register returns a binary vector of length n,
 representing a random multi-index of the tensor. The probability of obtaining
 a multi-index is equal to the squared magnitude of the corresponding entry
 of the tensor. Measuring a register changes the state of the register.
+
+# Requirements
+
+This script was developed using Python 3.6.8 and NumPy 1.17.3.
+It should work with any version of Python from 3.5 to 3.8.
 
 # Credits
 
