@@ -40,8 +40,24 @@ import numpy as np
 from collections import Counter
 
 
+def qubit():
+    """Create a qubit, initialized to |0〉.
+    Returns a complex tensor of shape (2,).
+    Equivalent to quantum_register(1)."""
+    return np.array([1, 0j])
+
+
+def random_qubit():
+    """Create a qubit with random complex amplitudes.
+    Returns a complex tensor of shape (2,).
+    Equivalent to random_register(1)."""
+    qubit = np.random.randn(2) + 1j * np.random.randn(2)
+    qubit /= np.linalg.norm(qubit)
+    return qubit
+
+
 def quantum_register(number_of_qubits):
-    """Creates a linear register of qubits, initialized to |000...0>.
+    """Creates a linear register of qubits, initialized to |000...0〉.
     Returns a complex tensor of shape (2, 2, ..., 2)."""
     shape = (2,) * number_of_qubits
     first = (0,) * number_of_qubits
@@ -60,7 +76,7 @@ def random_register(number_of_qubits):
 
 
 def display(tensor):
-    """Displays the tensor entries in tabular form"""
+    """Displays the tensor entries in tabular form."""
     for multiindex in product(*map(range, tensor.shape)):
         ket = '|' + str(multiindex)[1:-1].replace(', ', '') + '⟩'
         value = tensor[multiindex]
