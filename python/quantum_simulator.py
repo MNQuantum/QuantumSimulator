@@ -293,7 +293,7 @@ def measure_all(collapse=True):
         multiindex = np.unravel_index(index, register.shape)
         if collapse:
             register.fill(0)
-            register[multiindex] = 1.0j
+            register[multiindex] = 1.0
         return multiindex
     return m
 
