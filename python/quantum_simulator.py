@@ -9,7 +9,7 @@ Quantum computing simulator using NumPy tensors.
 An n-qubit quantum register is represented by a tensor of complex numbers
 of shape (2, 2, ..., 2), containing 2^n complex numbers. Each complex number
 requires 128 bits of memory (using np.complex128). The sum of the squared
-magnitudes of the amplitudes of a quantum register must equal one.
+magnitudes of the amplitudes in a quantum register must equal one.
 
 Quantum gates are represented as unitary complex tensors.
   *  A unary gate is a tensor of shape (2, 2).
