@@ -47,13 +47,13 @@ from typing import Callable, List, Tuple
 
 def qubit() -> np.ndarray:
     """Create a qubit, initialized to |0〉.
-    Returns a complex tensor of shape (2,).
+    Returns a complex (np.complex128) tensor of shape (2,).
     Equivalent to quantum_register(1).
     
     Returns:
         np.ndarray: A complex tensor of shape (2,) representing the qubit.
     """
-    return np.array([1, 0j])
+    return np.array([1, 0j], dtype=np.complex128)
 
 
 def random_qubit() -> np.ndarray:
@@ -61,11 +61,11 @@ def random_qubit() -> np.ndarray:
 
     Returns:
         np.ndarray: A complex tensor of shape (2,) representing the qubit.
-    Returns a complex tensor of shape (2,).
+    Returns a complex (np.complex128) tensor of shape (2,).
     """
-    qubit = np.random.randn(2) + 1j * np.random.randn(2)
-    qubit /= np.linalg.norm(qubit)
-    return qubit
+    q = np.random.standard_normal(2) + 1j * np.random.standard_normal(2)
+    q /= np.linalg.norm(q)
+    return q
 
 
 def quantum_register(number_of_qubits: int) -> np.ndarray:
@@ -86,7 +86,7 @@ def quantum_register(number_of_qubits: int) -> np.ndarray:
 
 def random_register(number_of_qubits: int) -> np.ndarray:
     """Creates a linear register of qubits with random complex amplitudes.
-    Returns a complex tensor of shape (2, 2, ..., 2).
+    Returns a complex (np.complex128) tensor of shape (2, 2, ..., 2).
     
     Args:
         number_of_qubits (int): The number of qubits in the register.
@@ -95,7 +95,7 @@ def random_register(number_of_qubits: int) -> np.ndarray:
         np.ndarray: A complex tensor representing the quantum register.
     """
     shape = (2,) * number_of_qubits
-    register = np.random.randn(*shape) + np.random.randn(*shape) * 1j
+    register = np.random.standard_normal(shape) + np.random.standard_normal(shape) * 1j
     register = register / np.linalg.norm(register)
     return register
 
@@ -111,7 +111,7 @@ def display(tensor: np.ndarray) -> None:
         None
 
     Example:
-        >>> state = (np.array([[1, 2], [3, 4]], dtype=complex) / np.sqrt(30))
+        >>> state = (np.array([[1, 2], [3, 4]], dtype=np.complex128) / np.sqrt(30))
         >>> display(state)
         |00⟩    0.18257 + 0.00000 i
         |01⟩    0.36515 + 0.00000 i
@@ -243,13 +243,13 @@ def T(index: int) -> Callable:
 
 def H(index: int) -> Callable:
     """Generates a Hadamard gate. It returns a function that can be applied to a register."""
-    gate = np.array([[1, 1], [1, -1]]) / np.sqrt(2)
+    gate = np.array([[1, 1], [1, -1]], dtype=np.complex128) / np.sqrt(2.)
     return apply_gate(gate, index)
 
 
 def SNOT(index: int) -> Callable:
     """Generates a 'square root of NOT' gate. It returns a function that can be applied to a register."""
-    gate = np.array([[1 + 1j, 1 - 1j], [1 - 1j, 1 + 1j]]) / 2
+    gate = np.array([[1+1j, 1-1j], [1-1j, 1+ 1j]], dtype=np.complex128) / 2.
     return apply_gate(gate, index)
 
 
@@ -261,7 +261,7 @@ def SWAP(i: int, j: int) -> Callable:
     gate = np.array([1, 0, 0, 0,
                      0, 0, 1, 0,
                      0, 1, 0, 0,
-                     0, 0, 0, 1]
+                     0, 0, 0, 1], dtype=np.complex128
                      ).reshape((2, 2, 2, 2))
     return apply_gate(gate, i, j)
 
@@ -271,7 +271,7 @@ def CNOT(i: int, j: int) -> Callable:
     gate = np.array([1, 0, 0, 0,
                      0, 1, 0, 0,
                      0, 0, 0, 1,
-                     0, 0, 1, 0]
+                     0, 0, 1, 0], dtype=np.complex128
                      ).reshape((2, 2, 2, 2))
     return apply_gate(gate,i, j)
 
@@ -283,7 +283,7 @@ def CY(i: int, j: int) -> Callable:
     gate = np.array([1, 0, 0, 0,
                      0, 1, 0, 0,
                      0, 0, 0, -1j,
-                     0, 0, 1j, 0]
+                     0, 0, 1j, 0], dtype=np.complex128
                      ).reshape((2, 2, 2, 2))
     return apply_gate(gate, i, j)
 
@@ -293,7 +293,7 @@ def CZ(i: int, j: int) -> Callable:
     gate = np.array([1, 0, 0, 0,
                      0, 1, 0, 0,
                      0, 0, 1, 0,
-                     0, 0, 0, -1]
+                     0, 0, 0, -1], dtype=np.complex128
                      ).reshape((2, 2, 2, 2))
     return apply_gate(gate, i, j)
 
@@ -302,7 +302,7 @@ def C(i: int, j: int, unary_gate: np.ndarray) -> Callable:
     """Generates a controlled (binary) version of a unary gate.
     When the value at the first index is 1, apply the unary gate to the value at the second index.
     When the value at the first index is 0, do nothing."""
-    gate = np.zeros((2, 2, 2, 2))
+    gate = np.zeros((2, 2, 2, 2), dtype=np.complex128)
     gate[0, :, 0, :] = np.eye(2)
     gate[1, :, 1, :] = unary_gate
     return apply_gate(gate, i, j)
@@ -312,7 +312,7 @@ def C(i: int, j: int, unary_gate: np.ndarray) -> Callable:
 
 def CCNOT(i: int, j: int, k: int) -> Callable:
     """Generates a Toffoli gate."""
-    gate = np.eye(8)
+    gate = np.eye(8, dtype=np.complex128)
     gate[6:8, 6:8] = np.array([[0, 1], [1, 0]])
     gate = gate.reshape((2, 2, 2, 2, 2, 2))
     return apply_gate(gate, i, j, k)
@@ -320,7 +320,7 @@ def CCNOT(i: int, j: int, k: int) -> Callable:
 
 def CSWAP(i: int, j: int, k: int) -> Callable:
     """Generates a Fredkin gate, or a controlled SWAP gate."""
-    gate = np.eye(8)
+    gate = np.eye(8, dtype=np.complex128)
     gate[5:7, 5:7] = np.array([[0, 1], [1, 0]])
     gate = gate.reshape((2, 2, 2, 2, 2, 2))
     return apply_gate(gate, i, j, k)
@@ -482,12 +482,11 @@ def test_partial_measurement() -> None:
     assert abs(m2 - 4000) < 150
 
 
-def test_full_measurement() -> None:
+def test_full_measurement(num_trials = 100_000) -> None:
     register = np.array([0.3, 0.4j, -0.5, 0.5 ** 0.5]).reshape((2, 2))
     m = measure_all(collapse=False)
-    N = 100000
-    expected = [N * 0.09, N * 0.16, N * 0.25, N * 0.5]
-    counts = Counter(m(register) for _ in range(N))
+    expected = [num_trials * 0.09, num_trials * 0.16, num_trials * 0.25, num_trials * 0.5]
+    counts = Counter(m(register) for _ in range(num_trials))
     observed = [counts[0,0], counts[0,1], counts[1,0], counts[1,1]]
     assert all(abs(x - y) < 400 for x, y in zip(expected, observed))
 
@@ -525,7 +524,11 @@ def run_tests() -> None:
     test_circuits()
 
 
-if __name__ == '__main__':
+def main():
     print('Running tests.')
     run_tests()
     print('Tests complete. No errors found.')
+
+
+if __name__ == '__main__':
+    main()
