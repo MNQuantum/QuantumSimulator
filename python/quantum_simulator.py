@@ -180,7 +180,7 @@ def apply_gate(gate: np.ndarray, *indices: int) -> Callable:
     return op
 
 
-def circuit(ops: List[callable]) -> Callable:
+def circuit(ops: List[Callable]) -> Callable:
     """Constructs a circuit as a sequence of quantum gates.
     This higher-order function returns another function that
     can be applied to a quantum register."""
@@ -191,7 +191,7 @@ def circuit(ops: List[callable]) -> Callable:
     return circ
 
 
-def measure_circuit(ops: List[callable], index=None) -> Callable:
+def measure_circuit(ops: List[Callable], index=None) -> Callable:
     """Constructs a circuit and performs a measurement."""
     circ = circuit(ops)
     def m(register):
