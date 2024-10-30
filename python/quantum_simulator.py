@@ -25,9 +25,7 @@ are expensive to implement physically.
 
 The quantum gate functions use a higher-order functional design: each gate
 function returns another function that can be applied to quantum registers.
-This enables easy composition of gates into circuits, e.g.:
-    apply_circuit = compose(apply_H(0), apply_CNOT(0, 1))
-    new_state = apply_circuit(register)
+This enables easy composition of gates into circuits.
 
 Measurement follows the quantum measurement postulates:
   * Measuring n qubits returns a binary vector of length n
